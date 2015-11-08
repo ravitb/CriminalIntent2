@@ -2,10 +2,10 @@ package com.ravit.android.criminalintent2;
 
 import android.support.v4.app.Fragment;
 
-public class CrimeActivity extends SingleFragmentActivity {
+public class CrimeListActivity extends SingleFragmentActivity {
 
 	@Override
 	public Fragment createFragment() {
-		return new CrimeFragment();
+		return new CrimeListFragment();
 	}
 }
