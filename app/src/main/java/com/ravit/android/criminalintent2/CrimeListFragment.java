@@ -1,5 +1,6 @@
 package com.ravit.android.criminalintent2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,20 +19,28 @@ import java.util.List;
  */
 public class CrimeListFragment extends Fragment {
 
-	private RecyclerView mCrimeRecycleView;
+	private RecyclerView mCrimeRecyclerView;
 	private CrimeAdapter mAdapter;
+	private static int mCrimePosition;
 
 	public CrimeListFragment() {
 		// Required empty public constructor
+	}
+
+	protected static void setCrimePosition(int crimePosition) {
+		mCrimePosition = crimePosition;
 	}
 
 	private void updateUI() {
 		CrimeLab crimeLab = CrimeLab.get(getActivity());
 		List<Crime> crimes = crimeLab.getCrimes();
 
-		mAdapter = new CrimeAdapter(crimes);
-		mCrimeRecycleView.setAdapter(mAdapter);
-
+		if (mAdapter == null) {
+			mAdapter = new CrimeAdapter(crimes);
+			mCrimeRecyclerView.setAdapter(mAdapter);
+		} else {
+			mAdapter.notifyItemChanged(mCrimePosition);
+		}
 	}
 
 	@Override
@@ -39,12 +48,18 @@ public class CrimeListFragment extends Fragment {
 							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
-		mCrimeRecycleView = (RecyclerView)view.findViewById(R.id.crime_recycler_view);
-		mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		mCrimeRecyclerView = (RecyclerView)view.findViewById(R.id.crime_recycler_view);
+		mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 		updateUI();
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateUI();
 	}
 
 	private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -72,6 +87,9 @@ public class CrimeListFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			Toast.makeText(getActivity(), mCrime.getTitle() + " clicked", Toast.LENGTH_SHORT).show();
+			Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+			CrimeListFragment.setCrimePosition(getAdapterPosition());
+			startActivity(intent);
 		}
 	}
 
