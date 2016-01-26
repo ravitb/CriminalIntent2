@@ -21,7 +21,7 @@ public class CrimeListFragment extends Fragment {
 
 	private RecyclerView mCrimeRecyclerView;
 	private CrimeAdapter mAdapter;
-	private static int mCrimePosition;
+	private static int mCrimePosition = -1;
 
 	public CrimeListFragment() {
 		// Required empty public constructor
@@ -87,7 +87,7 @@ public class CrimeListFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			Toast.makeText(getActivity(), mCrime.getTitle() + " clicked", Toast.LENGTH_SHORT).show();
-			Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+			Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
 			CrimeListFragment.setCrimePosition(getAdapterPosition());
 			startActivity(intent);
 		}
